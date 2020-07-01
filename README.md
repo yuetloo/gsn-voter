@@ -51,6 +51,10 @@ The following example shows how to deploy to the ropsten testnet. To deploy to a
 
 This example currently only supports GSN 1.0 network. The list of relay hubs for different environment can be found here: [GSN 1.0 networks](https://docs.opengsn.org/gsn-provider/networks.html#gsn_1_0). For GSN 1.0, relay hubs for all networks have the same address: `0xD216153c06E857cD7f72665E0aF1d7D82172F494`.
 
+## Notes
+
+The ethers.js experimental javascript library is downloaded from the npm repo [@yuetloo](https://www.npmjs.com/package/@yuetloo/ethers-experimental) because the pull request containing GSN signer implementation has not been added to the ethers.js library yet.
+
 ## License
 
 MIT
