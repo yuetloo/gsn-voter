@@ -1,6 +1,18 @@
-# Gas Station Network (GSN)
+# GSN Voter
 
-This repository contains a contract, Voting.sol, that implements the GsnRecipient interface. See [EIP 1613: Gas Stations network](https://eips.ethereum.org/EIPS/eip-1613) or [OpenGsn](https://docs.opengsn.org/learn/index.html) for more details about GSN. GSN enables accounts that do not own ether to be able to call state changing functions in the contracts that implement the GsnRecipient interface.
+This example shows the usage of [ethers.js](https://github.com/ethers-io/ethers.js) GSN signer.
+
+See [EIP 1613: Gas Stations network](https://eips.ethereum.org/EIPS/eip-1613) or [OpenGsn](https://docs.opengsn.org/learn/index.html) for more details about GSN. GSN enables accounts that do not own ether to be able to call state changing functions in the contracts that implement the GsnRecipient interface.
+
+The contract, Voting.sol, implements the GsnRecipient interface.
+
+There index.html file contains the all the javascript logic to create the GSN signer and send the transaction to the GSN relayer.
+
+## How the App Works
+
+1. Currently, the app only works in the ropsten network
+2. A new random account will be created to sign the transaction
+3. The transaction fee will be paid for by the Voting contract
 
 ## Contracts
 
@@ -38,12 +50,6 @@ The following example shows how to deploy to the ropsten testnet. To deploy to a
 ## GSN Networks
 
 This example currently only supports GSN 1.0 network. The list of relay hubs for different environment can be found here: [GSN 1.0 networks](https://docs.opengsn.org/gsn-provider/networks.html#gsn_1_0). For GSN 1.0, relay hubs for all networks have the same address: `0xD216153c06E857cD7f72665E0aF1d7D82172F494`.
-
-## How the App Works
-
-1. Currently, the app only works in the ropsten network
-2. A new random account will be created to sign the transaction
-3. The transaction fee will be paid for by the Voting contract
 
 ## License
 
