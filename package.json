@@ -1,0 +1,25 @@
+{
+  "name": "gsn-voter",
+  "version": "1.0.0",
+  "description": "A sample web application demonstrating the use of Gas Station Network (GSN)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yuetloo/gsn-voter.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/yuetloo/gsn-voter/issues"
+  },
+  "homepage": "https://github.com/yuetloo/gsn-voter#readme",
+  "dependencies": {
+    "@ethersproject/cli": "^5.0.1",
+    "@yuetloo/ethers-experimental": "^5.1.0",
+    "ethers": "^5.0.3"
+  }
+}

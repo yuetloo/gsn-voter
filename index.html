@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gsn Voter</title>
+    <style>
+      body {
+        background-color: #f1f1f1;
+      }
+
+      #content {
+        text-align: center;
+        padding-top: 10px;
+        margin: 0 0;
+      }
+
+      #subject {
+        color: dodgerblue;
+      }
+
+      .button {
+        background-color: white;
+        color: black;
+        border-radius: 5px;
+        padding: 10px 32px;
+        cursor: pointer;
+        transition: 0.4s;
+      }
+
+      .green {
+        border: 2px solid #4caf50;
+      }
+
+      .red {
+        border: 2px solid #f44336;
+      }
+
+      .green:hover {
+        background-color: #4caf50;
+        color: white;
+      }
+
+      .red:hover {
+        background-color: #f44336;
+        color: white;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="content">
+      <h1 id="subject"></h1>
+
+      <div id="button-group" style="display: none;">
+        <button class="button green" id="yes-button">Yes</button>
+        <button class="button red" id="no-button">No</button>
+      </div>
+
+      <div id="message"></div>
+      <div id="vote-result" style="display: none;">
+        <h2>Result:</h2>
+        <div>total YES: <span id="yes-total"></span></div>
+        <div>total NO: <span id="no-total"></span></div>
+      </div>
+    </div>
+
+    <script type="module">
+      import { ethers } from "./node_modules/ethers/dist/ethers.esm.min.js";
+      import { GsnSigner } from "./node_modules/@yuetloo/ethers-experimental/dist/experimental.esm.min.js";
+
+      const relayHubAddress = "0xD216153c06E857cD7f72665E0aF1d7D82172F494";
+      const relayHubAbi = [
+        "function balanceOf(address) public view returns(uint)",
+      ];
+
+      const voterAddress = "0x2d0fa41f46eCB101E44Aa04FE06716C4B27348E6";
+      const abi = [
+        "function subject() public view returns(string)",
+        "function totalYes() public view returns(uint)",
+        "function totalNo() public view returns(uint)",
+        "function voteYes() public",
+        "function voteNo() public",
+        "function votes(address) public view returns(uint8)",
+      ];
+
+      const provider = ethers.getDefaultProvider("ropsten");
+      const signer = ethers.Wallet.createRandom().connect(provider);
+
+      const buttonYes = document.getElementById("yes-button");
+      const buttonNo = document.getElementById("no-button");
+      const messageElement = document.getElementById("message");
+      const message = "Processing...Please wait....";
+
+      // create a gsn signer
+      const gsnSigner = new GsnSigner(signer);
+
+      displaySubject();
+
+      function displayButtons() {
+        const contract = new ethers.Contract(
+          relayHubAddress,
+          relayHubAbi,
+          provider
+        );
+
+        contract.balanceOf(voterAddress).then((balance) => {
+          if (balance.gt(0)) {
+            const buttons = document.getElementById("button-group");
+            buttons.style = "display:block";
+          } else {
+            displayResult();
+          }
+        });
+      }
+
+      function displaySubject() {
+        const contract = new ethers.Contract(voterAddress, abi, provider);
+
+        contract.subject().then((result) => {
+          console.log("subject is", result);
+          const subjectElement = document.getElementById("subject");
+          subjectElement.textContent = result;
+
+          displayButtons();
+        });
+      }
+
+      function displayResult() {
+        messageElement.innerHTML = "";
+
+        const resultElement = document.getElementById("vote-result");
+        resultElement.style = "display:block";
+
+        const contract = new ethers.Contract(voterAddress, abi, provider);
+        contract.totalYes().then((result) => {
+          const elem = document.getElementById("yes-total");
+          elem.textContent = result;
+        });
+
+        contract.totalNo().then((result) => {
+          const elem = document.getElementById("no-total");
+          elem.textContent = result;
+        });
+      }
+
+      function hideButtons() {
+        const buttons = document.getElementById("button-group");
+        buttons.style = "display:none";
+      }
+
+      function typeMessage(index) {
+        if (index < message.length) {
+          messageElement.innerHTML += message.charAt(index);
+          setTimeout(typeMessage, 100, ++index);
+        }
+      }
+
+      async function processClick(voteYes) {
+        hideButtons();
+        typeMessage(0);
+        const gasLimit = 300000;
+        const voterContract = new ethers.Contract(voterAddress, abi, gsnSigner);
+        const txPromise = voteYes
+          ? voterContract.voteYes({ gasLimit })
+          : voterContract.voteNo({ gasLimit });
+
+        try {
+          const tx = await txPromise;
+          console.log("tx", tx);
+          const receipt = await tx.wait();
+          console.log("receipt", receipt);
+
+          displayResult();
+        } catch (err) {
+          alert(err);
+        }
+      }
+
+      buttonYes.addEventListener("click", () => {
+        console.log("yes clicked");
+        signer.getAddress().then((address) => {
+          console.log(address);
+        });
+        processClick(true);
+      });
+
+      buttonNo.addEventListener("click", () => {
+        console.log("no clicked");
+        processClick(false);
+      });
+    </script>
+  </body>
+</html>
