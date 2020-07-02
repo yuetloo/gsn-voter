@@ -1,12 +1,12 @@
 # GSN Voter
 
-This example shows the usage of [ethers.js](https://github.com/ethers-io/ethers.js) GSN signer.
+This example (https://yuetloo.github.io/gsn-voter/) shows the usage of [ethers.js](https://github.com/ethers-io/ethers.js) GSN signer.
 
 See [EIP 1613: Gas Stations network](https://eips.ethereum.org/EIPS/eip-1613) or [OpenGsn](https://docs.opengsn.org/learn/index.html) for more details about GSN. GSN enables accounts that do not own ether to be able to call state changing functions in the contracts that implement the GsnRecipient interface.
 
 The contract, Voting.sol, implements the GsnRecipient interface.
 
-There index.html file contains the all the javascript logic to create the GSN signer and send the transaction to the GSN relayer.
+The index.html file contains all the javascript logic to create the GSN signer and send the transaction to the GSN relayer.
 
 ## How the App Works
 
